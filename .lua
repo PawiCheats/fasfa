@@ -7,7 +7,7 @@
  Y888P  ~Y8888P' Y888888P      888888D      Y88888P ~Y8888P' YP   YP  CONVERTER 
 ]=]
 
--- Instances: 7 | Scripts: 0 | Modules: 0 | Tags: 0
+-- Instances: 8 | Scripts: 1 | Modules: 0 | Tags: 0
 local G2L = {};
 
 -- StarterGui.ScreenGui
@@ -30,13 +30,14 @@ G2L["3"] = Instance.new("UICorner", G2L["2"]);
 
 
 
--- StarterGui.ScreenGui.Frame.Frame
+-- StarterGui.ScreenGui.Frame.Linie
 G2L["4"] = Instance.new("Frame", G2L["2"]);
 G2L["4"]["BorderSizePixel"] = 0;
 G2L["4"]["BackgroundColor3"] = Color3.fromRGB(34, 34, 34);
 G2L["4"]["Size"] = UDim2.new(0, 538, 0, 6);
 G2L["4"]["Position"] = UDim2.new(0, 0, 0.24275, 0);
 G2L["4"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
+G2L["4"]["Name"] = [[Linie]];
 
 
 -- StarterGui.ScreenGui.Frame.LocalPLayerBtn
@@ -80,5 +81,51 @@ G2L["7"]["Text"] = [[Vehicle]];
 G2L["7"]["Position"] = UDim2.new(0.28439, 0, 0.02899, 0);
 
 
+-- StarterGui.ScreenGui.Frame.LocalScript
+G2L["8"] = Instance.new("LocalScript", G2L["2"]);
+
+
+
+-- StarterGui.ScreenGui.Frame.LocalScript
+local function C_8()
+local script = G2L["8"];
+	-- LocalScript in dem Frame
+	
+	local UserInputService = game:GetService("UserInputService")
+	local frame = script.Parent.Parent.Frame
+	
+	local dragging = false
+	local dragStart
+	local startPos
+	
+	-- Funktion wird ausgelöst, wenn Eingabe beginnt (Maus oder Touch)
+	frame.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true
+			dragStart = input.Position
+			startPos = frame.Position
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+	
+	-- Funktion zum Bewegen des Frames
+	frame.InputChanged:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			local delta = input.Position - dragStart
+			frame.Position = UDim2.new(
+				startPos.X.Scale,
+				startPos.X.Offset + delta.X,
+				startPos.Y.Scale,
+				startPos.Y.Offset + delta.Y
+			)
+		end
+	end)
+	
+end;
+task.spawn(C_8);
 
 return G2L["1"], require;
